@@ -2,12 +2,21 @@
 
 Days 1–7
 
-Topics
+## Topics
 
 - Variables
 - Constants
 - Strings
+- Numbers
+- Booleans
+- String interpolation
 - Arrays
 - Dictionaries
+- Sets
+- Enums
+- Type annotations
+- If
+- Switch
+- Ternary operator
+- Loops
 - Functions
-- Control Flow
