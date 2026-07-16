@@ -48,7 +48,7 @@ class LoginViewModel {
 
 let maxRetryCount = 3
 let apiTimeout: TimeInterval = 30
-let baseURL = "https://api.mybank.com/v1"
+let baseURL = URL(string: "https://api.mybank.com/v1")
 
 // MARK: 3. Type Safety
 
@@ -68,3 +68,22 @@ var isEligible = false
 // When: For visual documentation (explicit intent) and to avoid ambiguity.
 let requestTimeout: TimeInterval = 30
 var username: String? = nil
+
+// MARK: 4. Variable Scope
+let names = "John"
+
+func greet() {
+    print(names)
+}
+
+// if true { let age = 24 }
+// print(age) // Cannot find 'age' in scope
+
+// Stored Property vs Local Variable
+class User {
+    var name = ""   // Stored Property
+
+    func login() {
+        let token = "" // Local Variable
+    }
+}
