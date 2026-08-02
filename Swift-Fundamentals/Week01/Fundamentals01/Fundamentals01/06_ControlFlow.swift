@@ -89,7 +89,6 @@ case .failure:
 
 // MARK: Exhaustiveness Checking
 /// Swift requires every enum case to be handled.
-///
 /// If a new enum case is added, every switch must be updated. This prevents forgotten business logic and makes refactoring safer.
 
 // MARK: 3. Ternary Conditional Operator
@@ -179,7 +178,6 @@ if isLoggedIn {
 /// Instead of:
 
 // if age > 18 && hasPermission && !isSuspended && isVerified ...
-
 /// Consider extracting business logic into a computed property or helper function.
 
 // MARK: 7. Common Mistakes
@@ -304,9 +302,7 @@ for (index, fruit) in fruits.enumerated() {
 /// The number of iterations is unknown.
 ///
 /// When?
-/// Retry logic.
-/// Polling.
-/// Waiting for a condition.
+/// Retry logic, Polling, Waiting for a condition.
 
 var retryCount = 0
 while retryCount < 3 {
@@ -364,24 +360,20 @@ for number in 1...5 {
 /// 5
 
 /// When?
-/// Skip invalid data while continuing
-/// to process the remaining elements.
+/// Skip invalid data while continuing to process the remaining elements.
 
 // MARK: Choosing the Right Loop
 /// for-in
-///
 /// • Preferred loop in Swift.
 /// • Iterating collections.
 /// • Known number of iterations.
 ///
 /// while
-///
 /// • Unknown number of iterations.
 /// • Waiting for a condition.
 /// • Retry logic.
 ///
 /// repeat-while
-///
 /// • Execute at least once.
 /// • Rarely used.
 
@@ -459,32 +451,25 @@ for item in transactions {
 // MARK: Common Mistakes
 
 /// ✖️ Infinite Loop
-
 /*
 while true {
 
 }
 */
 
-/// Always ensure
-/// the condition eventually becomes false.
+/// Always ensure the condition eventually becomes false.
 
-/// ✖️ Off-by-one Error
-
+/// ✖️ Off-by-one Error -> Index out of range
 /*
 for i in 0...fruits.count {
 
 }
 */
 
-/// This crashes because
-/// the last valid index is count - 1.
-
-/// Prefer iterating directly
-/// over the collection.
+/// This crashes because the last valid index is count - 1.
+/// Prefer iterating directly over the collection.
 
 // MARK: Summary
-
 /*
 for-in
 ────────────────────────────
