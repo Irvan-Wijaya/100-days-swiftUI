@@ -512,3 +512,359 @@ Need to stop immediately?
 Need to skip one iteration?
 → continue
 */
+
+
+// MARK: 4. Optional Binding
+
+/// Optional Binding safely unwraps an Optional value.
+///
+/// It combines two operations:
+/// 1. Check whether the Optional contains a value.
+/// 2. Bind the unwrapped value to a new constant.
+///
+/// Common forms:
+/// - if let
+/// - guard let
+///
+/// Why?
+/// Optionals may contain a value or nil.
+/// Swift prevents direct access to an Optional's underlying value
+/// until the possibility of nil has been handled.
+
+// MARK: 4.1 if let
+
+/// Use `if let` when the logic should execute
+/// only when the Optional contains a value.
+
+let username: String? = "Irvan"
+
+if let username {
+    print("Welcome \(username)")
+}
+
+/// Inside the block, `username` is a `String`,
+/// not a `String?`.
+
+
+/// Handle both possibilities:
+
+if let username {
+    print("Welcome \(username)")
+} else {
+    print("Username is unavailable")
+}
+
+
+// MARK: Multiple Optional Bindings
+
+let token: String? = "abc123"
+let userID: String? = "USER-001"
+
+if let token,
+   let userID {
+
+    print("Token:", token)
+    print("User ID:", userID)
+}
+
+
+// MARK: Optional Binding with Conditions
+
+let age: Int? = 24
+
+if let age,
+   age >= 18 {
+
+    print("User is an adult")
+}
+
+
+// MARK: 4.2 guard let
+
+/// Use `guard let` when a value is required
+/// for the current scope to continue.
+///
+/// If the condition fails, the `else` block
+/// must exit the current scope.
+
+func submitTransfer(token: String?) {
+
+    guard let token else {
+        return
+    }
+
+    print("Submitting transfer with token:", token)
+}
+
+/// After the guard succeeds,
+/// `token` remains available throughout
+/// the rest of the function.
+
+
+// MARK: Why guard?
+
+/// `guard` is especially useful for
+/// validating prerequisites at the beginning
+/// of a function.
+///
+/// It prevents deeply nested `if` statements.
+
+func processPayment(
+    token: String?,
+    amount: Decimal?,
+    accountID: String?
+) {
+
+    guard let token else {
+        return
+    }
+
+    guard let amount,
+          amount > 0 else {
+        return
+    }
+
+    guard let accountID else {
+        return
+    }
+
+    // Main business logic remains flat.
+
+    print(
+        "Payment:",
+        token,
+        amount,
+        accountID
+    )
+}
+
+
+// MARK: Industry Example - Networking
+
+func handleResponse(
+    data: Data?,
+    response: URLResponse?,
+    error: Error?
+) {
+
+    guard error == nil else {
+        print("Network error")
+        return
+    }
+
+    guard let response = response as? HTTPURLResponse else {
+        print("Invalid response")
+        return
+    }
+
+    guard response.statusCode == 200 else {
+        print("Server returned:", response.statusCode)
+        return
+    }
+
+    guard let data else {
+        print("Empty response")
+        return
+    }
+
+    decode(data)
+}
+
+
+// MARK: if let vs guard let
+
+/// `if let`:
+/// "If the value exists, execute this logic."
+
+if let imageURL {
+    imageView.load(imageURL)
+}
+
+/// `guard let`:
+/// "This value is required.
+/// If it is unavailable, stop."
+
+guard let imageURL else {
+    return
+}
+
+imageView.load(imageURL)
+
+
+// MARK: 4.3 Nil-Coalescing
+
+/// Use `??` when a simple fallback value is sufficient.
+
+let displayName = username ?? "Guest"
+
+/// Rule:
+///
+/// Need a block of logic?
+/// → if let / guard let
+///
+/// Need a simple fallback value?
+/// → ??
+
+
+/*
+Example:
+
+if let username {
+    showWelcomeScreen(username)
+} else {
+    showLoginScreen()
+}
+
+The two paths have different behavior,
+so `if let` is appropriate.
+
+But:
+
+let displayName = username ?? "Guest"
+
+Only a fallback value is needed,
+so nil-coalescing is simpler.
+*/
+
+
+// MARK: 4.4 if case
+
+/// `if case` is useful for matching
+/// a specific enum case and extracting
+/// its associated value.
+
+enum LoginState {
+    case idle
+    case loading
+    case success(String)
+    case failure(Error)
+}
+
+let state = LoginState.success("Irvan")
+
+if case let .success(username) = state {
+    print("Logged in as:", username)
+}
+
+
+// MARK: 4.5 guard case
+
+/// `guard case` works similarly,
+/// but exits early if the pattern does not match.
+
+func handleLogin(state: LoginState) {
+
+    guard case let .success(username) = state else {
+        return
+    }
+
+    print("Continue with:", username)
+}
+
+
+// MARK: Engineer Perspective
+
+/// Prefer `if let` when:
+/// - Both success and failure paths are meaningful.
+/// - The value is only needed inside a specific block.
+///
+/// Prefer `guard let` when:
+/// - The value is required for the rest of the scope.
+/// - Failure means the current operation cannot continue.
+/// - Multiple prerequisites need validation.
+/// - You want to avoid nested control flow.
+///
+/// Prefer `??` when:
+/// - A simple fallback value is enough.
+///
+/// Prefer `if case` / `guard case` when:
+/// - Working with enums and pattern matching.
+
+
+// MARK: Common Mistakes
+
+/// Avoid unnecessary force unwrapping:
+
+// let name = username!
+
+/// Prefer:
+
+if let username {
+    print(username)
+}
+
+/// Avoid deeply nested Optional Binding:
+
+/*
+if let user {
+    if let account {
+        if let token {
+            performTransfer()
+        }
+    }
+}
+*/
+
+/// Prefer early exits:
+
+guard let user else {
+    return
+}
+
+guard let account else {
+    return
+}
+
+guard let token else {
+    return
+}
+
+performTransfer()
+
+
+// MARK: - Summary
+
+/*
+Optional Binding
+────────────────────────────
+Safely extracts a value from an Optional.
+
+if let
+────────────────────────────
+Use when:
+• The value may or may not exist.
+• Different success/failure behavior is required.
+• The value is only needed inside a block.
+
+guard let
+────────────────────────────
+Use when:
+• The value is required to continue.
+• Failure should exit early.
+• Multiple prerequisites need validation.
+
+?? (Nil Coalescing)
+────────────────────────────
+Use when:
+• A simple fallback value is enough.
+
+if case / guard case
+────────────────────────────
+Use when:
+• Matching specific enum cases.
+• Extracting associated values.
+
+Rule of Thumb
+────────────────────────────
+Need the value only inside a branch?
+→ if let
+
+Need the value for the rest of the scope?
+→ guard let
+
+Need a fallback value?
+→ ??
+
+Need to match an enum case?
+→ if case / guard case
+*/
