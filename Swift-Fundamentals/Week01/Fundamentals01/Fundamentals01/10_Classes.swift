@@ -1,7 +1,6 @@
 // MARK: Classes in Swift
 
 /// ## Overview
-///
 /// A Swift `class` is a custom reference type that can encapsulate:
 /// - stored and computed properties
 /// - instance and type methods
@@ -11,8 +10,7 @@
 /// - deinitialization
 /// - reference identity
 ///
-/// The most important distinction between `class` and `struct` is not syntax.
-/// It is **semantics**:
+/// The most important distinction between `class` and `struct` is not syntax. It is **semantics**:
 ///
 /// - `struct` → value semantics
 /// - `class` → reference semantics
@@ -29,12 +27,8 @@
 
 
 // MARK: - 1. The Mental Model: Value vs Reference
-
 /// ## Struct = "This value"
-///
-/// A struct represents a value.
-///
-/// Assigning a struct creates an independent value.
+/// A struct represents a value. Assigning a struct creates an independent value.
 
 struct ValueUser {
     var name: String
@@ -42,7 +36,6 @@ struct ValueUser {
 
 var valueUser1 = ValueUser(name: "Taylor")
 var valueUser2 = valueUser1
-
 valueUser2.name = "John"
 
 print(valueUser1.name) // Taylor
@@ -55,7 +48,6 @@ print(valueUser2.name) // John
 ///
 ///     Change valueUser2
 ///             ↓
-///
 ///     valueUser1 ──> User("Taylor")
 ///     valueUser2 ──> User("John")
 ///
@@ -65,13 +57,8 @@ print(valueUser2.name) // John
 ///
 /// This is one reason structs are predictable and excellent for data models.
 
-
 // MARK: - 2. Classes = Shared Reference to the Same Instance
-
-/// A class behaves differently.
-///
-/// Assignment does not create another independent object.
-/// Instead, both variables can refer to the same class instance.
+/// A class behaves differently. Assignment does not create another independent object.  Instead, both variables can refer to the same class instance.
 
 final class ReferenceUser {
     var name: String
@@ -83,7 +70,6 @@ final class ReferenceUser {
 
 let referenceUser1 = ReferenceUser(name: "Taylor")
 let referenceUser2 = referenceUser1
-
 referenceUser2.name = "John"
 
 print(referenceUser1.name) // John
@@ -95,9 +81,7 @@ print(referenceUser2.name) // John
 ///
 ///     let referenceUser2 = referenceUser1
 ///
-/// does not create another `ReferenceUser`.
-///
-/// Both variables refer to the same instance.
+/// does not create another `ReferenceUser`. Both variables refer to the same instance.
 ///
 ///     referenceUser1 ─────┐
 ///                         ▼
@@ -113,7 +97,6 @@ print(referenceUser2.name) // John
 
 
 // MARK: - 3. Identity
-
 /// A class instance has identity.
 ///
 /// Consider:
@@ -152,12 +135,10 @@ final class BankAccount {
 
 let accountA = BankAccount(id: "ACC-001")
 let accountB = accountA
-
 print(accountA === accountB) // true
 
 
 // MARK: - 4. Why Would We Want Reference Semantics?
-
 /// The important engineering question is not:
 ///
 ///     "Can I use a class?"
@@ -188,11 +169,8 @@ print(accountA === accountB) // true
 ///
 /// All components can intentionally interact with the same session object.
 
-
 // MARK: - 5. Basic Class Syntax
-
 /// A class can contain the same fundamental building blocks you already saw with structs:
-///
 /// - properties
 /// - methods
 /// - initializers
@@ -219,18 +197,14 @@ let person = Person(name: "Taylor", age: 24)
 person.introduce()
 
 
-// MARK: - 6. `let` on a Class Does NOT Make the Object Immutable
-
+// MARK: - 6. `let` on a Class Does NOT Make the Object Immutable | Essentials
 /// This is one of the most important differences between a class and a struct.
-///
 /// For a class:
 ///
 ///     let user = User(...)
 ///
 /// makes the **reference** constant.
-///
 /// It does NOT automatically make the object's mutable properties immutable.
-///
 /// Example:
 
 final class MutableUser {
@@ -242,7 +216,6 @@ final class MutableUser {
 }
 
 let mutableUser = MutableUser(name: "Taylor")
-
 mutableUser.name = "John" // Valid
 
 /// But this is not valid:
@@ -272,22 +245,17 @@ mutableUser.name = "John" // Valid
 ///     user.name = "John" // Error
 ///
 /// Rule:
-///
 /// - `struct` + `let` → the value cannot be mutated
 /// - `class` + `let` → the reference cannot be redirected
 
-
 // MARK: - 7. When Should You Use a Class?
-
 /// Start with this engineering heuristic:
 ///
 ///     Use a class when the object has meaningful identity
 ///     or intentional shared mutable state.
 ///
 /// Ask these questions:
-///
 /// 1. Does the object need identity?
-///
 ///    Examples:
 ///    - a specific UIViewController
 ///    - a specific coordinator
@@ -295,7 +263,6 @@ mutableUser.name = "John" // Valid
 ///    - a specific long-lived service instance
 ///
 /// 2. Should multiple components share one mutable instance?
-///
 ///    Example:
 ///
 ///         Feature A ─┐
@@ -303,13 +270,10 @@ mutableUser.name = "John" // Valid
 ///         Feature C ─┘
 ///
 /// 3. Does the object have a meaningful lifecycle?
-///
 ///    Classes support `deinit`, which matters for objects that own or manage resources.
 ///
 /// 4. Is inheritance genuinely required?
-///
 ///    Swift classes support inheritance and overriding.
-
 
 // MARK: - 8. When Should You NOT Use a Class?
 
@@ -317,10 +281,7 @@ mutableUser.name = "John" // Valid
 ///
 ///     "Classes are more powerful, so I should use classes for everything."
 ///
-/// That is not a sound design rule.
-///
-/// If a type primarily represents data, a struct is usually a better starting point.
-///
+/// That is not a sound design rule, If a type primarily represents data, a struct is usually a better starting point.
 /// Example:
 
 struct Transaction {
@@ -329,31 +290,24 @@ struct Transaction {
     let date: Date
 }
 
-/// A transaction usually represents a **value**, not a long-lived shared object
-/// with independently managed identity.
-///
+/// A transaction usually represents a **value**, not a long-lived shared object  with independently managed identity.
 /// This means:
-///
 /// - no shared mutable identity is normally required
 /// - no inheritance is normally required
 /// - no custom object lifecycle is normally required
 ///
 /// Rule of thumb:
 ///
-///     Start with a struct.
-///     Move to a class when you have a concrete reason.
+///     Start with a struct. Move to a class when you have a concrete reason.
 ///
 /// Possible reasons:
-///
 /// - identity
 /// - shared mutable state
 /// - lifecycle
 /// - inheritance
 /// - UIKit/Foundation/API requirements
 
-
 // MARK: - 9. Real iOS Example: Transaction Model
-
 /// Banking transaction data is a strong candidate for a struct.
 ///
 ///     Transaction
@@ -361,23 +315,16 @@ struct Transaction {
 ///     data/value
 ///
 /// It can be:
-///
 /// - decoded from an API
 /// - passed between layers
 /// - rendered by views
 /// - transformed into another representation
 ///
-/// You normally do not need a transaction object to own a lifecycle or coordinate
-/// other objects.
-
+/// You normally do not need a transaction object to own a lifecycle or coordinate other objects.
 
 // MARK: - 10. Real iOS Example: Session Manager
-
 /// Authentication/session state is a different problem.
-///
-/// Multiple parts of the application may need to interact with the same session state.
-///
-/// That makes reference semantics useful.
+/// Multiple parts of the application may need to interact with the same session state. That makes reference semantics useful.
 
 final class SessionManager {
     private(set) var accessToken: String?
@@ -396,18 +343,15 @@ final class SessionManager {
 }
 
 let sessionManager = SessionManager()
-
 sessionManager.login(with: "token-123")
 
 print(sessionManager.isLoggedIn) // true
 print(sessionManager.accessToken ?? "No token")
 
 sessionManager.logout()
-
 print(sessionManager.isLoggedIn) // false
 
 /// The important point is not that "SessionManager must be a class".
-///
 /// The important point is:
 ///
 ///     Multiple components may intentionally participate
@@ -415,13 +359,8 @@ print(sessionManager.isLoggedIn) // false
 ///
 /// That is reference semantics doing useful architectural work.
 
-
 // MARK: - 11. Class Inheritance
-
-/// One major capability classes have that structs do not is inheritance.
-///
-/// A class can inherit behavior and stored/computed properties from a superclass.
-///
+/// One major capability classes have that structs do not is inheritance. A class can inherit behavior and stored/computed properties from a superclass.
 /// Conceptually:
 ///
 ///     PaymentService
@@ -441,13 +380,10 @@ final class CardPaymentService: PaymentService {
 }
 
 let cardPaymentService = CardPaymentService()
-
 cardPaymentService.process()
 cardPaymentService.validateCard()
 
-
 // MARK: - 12. Overriding
-
 /// A subclass can specialize inherited behavior using `override`.
 
 class BasePaymentService {
@@ -472,11 +408,8 @@ specializedService.process()
 ///
 /// The compiler can then validate that the override is legitimate.
 
-
 // MARK: - 13. `final`
-
 /// `final` prevents a class from being subclassed.
-///
 /// Example:
 
 final class NetworkClient {
@@ -484,7 +417,6 @@ final class NetworkClient {
 }
 
 /// You can also prevent a specific method from being overridden:
-
 class BaseService {
     final func authenticate() {
         print("Authenticating")
@@ -492,26 +424,21 @@ class BaseService {
 }
 
 /// Engineering perspective:
-///
 /// `final` communicates:
 ///
 ///     "This abstraction is not designed to be extended
 ///      through inheritance."
 ///
 /// This is useful for many application-level types:
-///
 /// - services
 /// - managers
 /// - repositories
 /// - use-case objects
 /// - infrastructure components
 ///
-/// Many classes do not actually need subclassing.
-/// Making that explicit reduces accidental inheritance.
-
+/// Many classes do not actually need subclassing. Making that explicit reduces accidental inheritance.
 
 // MARK: - 14. Inheritance Is Powerful, But Do Not Default to It
-
 /// Inheritance creates a strong dependency:
 ///
 ///     Subclass
@@ -521,7 +448,6 @@ class BaseService {
 /// If the superclass changes, subclasses may also be affected.
 ///
 /// This can create:
-///
 /// - tight coupling
 /// - fragile base classes
 /// - difficult testing
@@ -536,7 +462,6 @@ class BaseService {
 ///     "Do I genuinely need subtype polymorphism and inherited behavior?"
 ///
 /// If not, composition or protocols may be more appropriate.
-
 
 // MARK: - 15. Composition vs Inheritance
 
@@ -1210,16 +1135,3 @@ transferCoordinator.startTransfer(transferRequest)
 /// Structs are usually about what something IS as a value;
 /// classes are about a particular thing EXISTING as an identity
 /// that can be shared, mutated, and managed over time.
-
-
-// MARK: - References
-
-/// Official Swift documentation:
-/// https://docs.swift.org/swift-book/documentation/the-swift-programming-language/
-///
-/// Relevant topics:
-/// - Classes and Structures
-/// - Initialization
-/// - Inheritance
-/// - Deinitialization
-/// - Automatic Reference Counting
