@@ -423,8 +423,7 @@ class BaseService {
     }
 }
 
-/// Engineering perspective:
-/// `final` communicates:
+/// Engineering perspective: `final` communicates:
 ///
 ///     "This abstraction is not designed to be extended
 ///      through inheritance."
@@ -435,7 +434,6 @@ class BaseService {
 /// - repositories
 /// - use-case objects
 /// - infrastructure components
-///
 /// Many classes do not actually need subclassing. Making that explicit reduces accidental inheritance.
 
 // MARK: - 14. Inheritance Is Powerful, But Do Not Default to It
@@ -464,7 +462,6 @@ class BaseService {
 /// If not, composition or protocols may be more appropriate.
 
 // MARK: - 15. Composition vs Inheritance
-
 /// Inheritance often represents:
 ///
 ///     "A is a B"
@@ -513,11 +510,8 @@ let checkoutCoordinator = CheckoutCoordinator(
 
 checkoutCoordinator.startPayment()
 
-/// This design makes the coordinator depend on a capability
-/// rather than a concrete superclass.
-///
+/// This design makes the coordinator depend on a capability rather than a concrete superclass.
 /// Benefits include:
-///
 /// - explicit dependencies
 /// - easier testing
 /// - lower coupling
@@ -529,11 +523,8 @@ checkoutCoordinator.startPayment()
 
 
 // MARK: - 16. Deinitialization
-
-/// Classes can define a `deinit`.
-///
-/// `deinit` runs when the class instance is about to be deallocated.
-/// You do not call it manually.
+/// Classes can define a `deinit`
+/// `deinit` runs when the class instance is about to be deallocated.  You do not call it manually.
 
 final class FileHandler {
     init() {
@@ -549,18 +540,12 @@ func demonstrateDeinitialization() {
     let handler = FileHandler()
     print(handler)
 }
-
 demonstrateDeinitialization()
 
-/// After the function scope ends, the local strong reference disappears.
-/// If no other strong references exist, the object can be deallocated
-/// and `deinit` can run.
-
+/// After the function scope ends, the local strong reference disappears. If no other strong references exist, the object can be deallocated  and `deinit` can run.
 
 // MARK: - 17. ARC: The Lifecycle Behind Classes
-
 /// Swift uses Automatic Reference Counting (ARC) for class instances.
-///
 /// Simplified mental model:
 ///
 ///     Number of strong references
@@ -568,7 +553,6 @@ demonstrateDeinitialization()
 ///     determines whether the object can remain alive.
 ///
 /// Example:
-
 final class UserSessionObject {
     let id: String
 
@@ -578,13 +562,9 @@ final class UserSessionObject {
 }
 
 var session1: UserSessionObject? = UserSessionObject(id: "SESSION-001")
-
 var session2 = session1
-
 session1 = nil
-
 print(session2?.id ?? "No session")
-
 session2 = nil
 
 /// Conceptually:
@@ -605,15 +585,9 @@ session2 = nil
 ///
 /// no strong references remain, so the object can be deallocated.
 
-
 // MARK: - 18. Why ARC Matters to an iOS Engineer
-
 /// You normally do not manually manage retain/release operations in Swift.
-///
-/// But you must still understand ownership.
-///
-/// This becomes critical with:
-///
+/// But you must still understand ownership.  This becomes critical with:
 /// - closures
 /// - delegates
 /// - timers
