@@ -81,9 +81,26 @@ func greet() {
 
 // Stored Property vs Local Variable
 class User {
-    var name = ""   // Stored Property
+    var name = "Van" // Stored Property
 
-    func login() {
-        let token = "" // Local Variable
+    func printName() {
+        let message = "Hello, \(name)" // Local Variable
+        print(message)
     }
 }
+
+let user = User()
+print(user.name) // ✔️
+user.printName() // ✔️
+print(message)   // ✖️
+
+// self dan Property Scope
+class Customer {
+    var name: String
+
+    init(name: String) {
+        self.name = name
+    }
+    // self.name -> property | name -> parameter
+}
+// The deeper you go into { }, the narrower the scope.
