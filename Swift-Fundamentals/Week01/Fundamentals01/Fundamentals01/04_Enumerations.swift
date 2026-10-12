@@ -129,6 +129,34 @@ enum UserRole {
     case guest
 }
 
+// Associated Values
+/// when login succeed, we need User data and when failed we need error message
+struct User {
+    let id: String
+    let name: String
+}
+
+enum ViewState {
+    case idle
+    case loading
+    case success(user: User)
+    case failure(message: String)
+}
+
+// Implemantation in ViewModel / ViewController:
+let currentState = ViewState.success(user: User(id: "1", name: "Budi"))
+
+switch currentState {
+case .idle:
+    print("Menunggu input")
+case .loading:
+    print("Menampilkan loading spinner...")
+case .success(let user):
+    print("Selamat datang, \(user.name)!")
+case .failure(let message):
+    print(" Munculkan alert error: \(message)")
+}
+
 // MARK: - Summary
 /*
 Enum:
