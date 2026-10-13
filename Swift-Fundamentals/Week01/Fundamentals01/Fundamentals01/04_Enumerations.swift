@@ -148,13 +148,13 @@ let currentState = ViewState.success(user: User(id: "1", name: "Budi"))
 
 switch currentState {
 case .idle:
-    print("Menunggu input")
+    print("waiting user input...")
 case .loading:
-    print("Menampilkan loading spinner...")
+    print("show loading spinner")
 case .success(let user):
-    print("Selamat datang, \(user.name)!")
+    print("welcome, \(user.name)!")
 case .failure(let message):
-    print(" Munculkan alert error: \(message)")
+    print(" show alert error: \(message)")
 }
 
 // MARK: - Summary
