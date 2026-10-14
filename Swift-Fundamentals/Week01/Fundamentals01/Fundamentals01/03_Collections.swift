@@ -316,6 +316,9 @@ let layoutPadding: [DeviceType: Double] = [
     .tablet: 24.0,
     .desktop: 32.0
 ]
+let testLayout: DeviceType = .phone
+let padding = layoutPadding[testLayout] ?? 0.0
+print("\(testLayout): \(padding)") // phone: 16.0
 
 // MARK: - Swift Set-Specific Functions Cheat Sheet
 // 1. SET OPERATIONS (Produces a New Set / Mathematical Set Operations)
