@@ -41,7 +41,7 @@ let requestStatus = RequestStatus.success
 // MARK: 4. Type Safety
 /// Enum values belong only to their own type.
 
-enum PaymentMethod {
+enum PaymentMethods {
     case cash
     case creditCard
 }
@@ -51,7 +51,7 @@ enum DeliveryMethod {
     case shipping
 }
 
-let payment = PaymentMethod.cash
+let payment = PaymentMethods.cash
 
 // Error
 // payment = DeliveryMethod.pickup
@@ -129,6 +129,8 @@ enum UserRole {
     case guest
 }
 
+// =================================================================================
+
 // Associated Values
 /// when login succeed, we need User data and when failed we need error message
 struct User {
@@ -155,6 +157,97 @@ case .success(let user):
     print("welcome, \(user.name)!")
 case .failure(let message):
     print(" show alert error: \(message)")
+}
+
+// =================================================================================
+
+/// `Codable` allows the enum to be automatically converted to and from other data formats, most notably JSON.
+/// - The enum must have a defined `RawValue` (e.g., `String` or `Int`) so Swift knows how to map the data during encoding and decoding.
+/// - It eliminates the need to write custom parsing logic when integrating with APIs or local storage.
+enum OrderStatus: String, Codable {
+    case pending = "PENDING_PAYMENT"
+    case processing = "IN_PROCESS"
+    case shipped = "SHIPPED"
+}
+
+// Example: Decoding/Converting a String from an API into an Enum instance
+let apiResponse = "SHIPPED"
+if let status = OrderStatus(rawValue: apiResponse) {
+    print("Status: \(status)") // shipped
+    print("Raw Value: \(status.rawValue)") // SHIPPED
+}
+
+// =================================================================================
+
+/// `CaseIterable` automatically provides an `allCases` property that returns a collection of all enum cases.
+/// - The enum itself does not become an array; you must access `.allCases` to get the collection.
+/// - This enables the use of standard array/collection methods directly on `.allCases`.
+enum AppTheme: String, CaseIterable {
+    case system = "Sesuai Sistem"
+    case light = "Mode Terang"
+    case dark = "Mode Gelap"
+}
+
+// Example: Iterating through all cases using a loop
+for theme in AppTheme.allCases {
+    print(theme.rawValue)
+}
+
+/// You can then use standard Collection methods on `.allCases` just like an ordinary array.
+/// - Common methods include `.count`, `.map()`, `.filter()`, `.randomElement()`, and `.shuffled()`.
+let totalTheme = AppTheme.allCases.count
+let modeTheme = AppTheme.allCases.map { "\(\$0)".capitalized }
+let randomTheme = AppTheme.allCases.randomElement()
+
+// =================================================================================
+
+/// STUDY NOTES: NESTED ENUMS & ASSOCIATED VALUES
+/// - Nested Enums (`Bank`, `EWalletProvider`) group related choices inside a parent namespace.
+/// - Associated Values store dynamic, case-specific data (like `phoneNumber` or `lastFourDigits`).
+/// - Value Binding (`let`) extracts this custom data inside the `switch` statement for runtime use.
+
+enum PaymentMethod {
+    // 1. Nested Enum for Bank category
+    enum Bank: String, CaseIterable {
+        case bca = "BCA Virtual Account"
+        case mandiri = "Mandiri Bill"
+        case bni = "BNI Virtual Account"
+    }
+
+    // 2. Nested Enum for E-Wallet category
+    enum EWalletProvider: String, CaseIterable {
+        case gopay = "GoPay"
+        case octo = "Octo Pay"
+        case ovo = "OVO"
+        case dana = "DANA"
+    }
+
+    // Main cases using Nested Enums and custom data as Associated Values
+    case cashOnDelivery
+    case bankTransfer(Bank)
+    case eWallet(EWalletProvider, phoneNumber: String)
+    case creditCard(lastFourDigits: String)
+}
+
+// Usage on Checkout Page:
+let selectedPayment: PaymentMethod = .eWallet(.octo, phoneNumber: "08123456789")
+// let selectedPayment: PaymentMethod = .creditCard(lastFourDigits: "1234")
+
+switch selectedPayment {
+case .cashOnDelivery:
+    print("Pay cash directly to the courier")
+
+case .bankTransfer(let bank):
+    // Extracts the nested 'Bank' enum and reads its rawValue
+    print("Please transfer to \(bank.rawValue)")
+
+case .eWallet(let provider, let phone):
+    // Extracts both the 'EWalletProvider' enum and the dynamic phone number string
+    print("Opening the \(provider.rawValue) application for number \(phone)")
+
+case .creditCard(let digits):
+    // Extracts the dynamic card digits string
+    print("Charging the credit card ending in \(digits)")
 }
 
 // MARK: - Summary
