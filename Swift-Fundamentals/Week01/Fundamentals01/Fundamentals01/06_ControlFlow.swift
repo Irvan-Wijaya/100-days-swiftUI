@@ -584,7 +584,7 @@ func processPayment(token: String?, amount: Decimal?, accountID: String?) {
         return
     }
 
-    // Main business logic remains flat.
+    // Main business logic remains flat
     print("Payment:", token, amount, accountID)
 }
 
